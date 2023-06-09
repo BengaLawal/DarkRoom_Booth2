@@ -145,14 +145,10 @@ class Keyboard:
         # keep in mind the char may look like uppercase on keyboard but not show uppercase in the entry box when clicked
         # look at the else statement in attach_key_press() to see how the uppercase is implemented
         for widget in self.master.winfo_children():
-            if isinstance(widget, ctk.CTkButton):  # if widget is a button
-                alphabet = widget.cget("text")  # get the text associated with the button
-                if alphabet in ["gmail", "yahoo", "hotmail", ".com", "Enter", "Backspace", "Cancel", "123",]:
-                    continue  # do not make change the case of these buttons
-                else:
-                    new_char = alphabet.upper() if alphabet.islower() else alphabet.lower()
-                    widget.configure(text=new_char)
-                    self.is_upper = True if alphabet.islower() else False
+            if isinstance(widget, ctk.CTkButton) and widget.cget("text") not in \
+                    ["gmail", "yahoo", "hotmail", ".com", "Enter", "Backspace", "Cancel", "123",]:  # if widget is a button
+                    widget.configure(text=widget.cget("text").swapcase())
+        self.is_upper = not self.is_upper
 
     def handle_space(self):
         """handle space key press"""

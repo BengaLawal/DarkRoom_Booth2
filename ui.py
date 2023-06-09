@@ -75,29 +75,28 @@ class UserInterface(ctk.CTkFrame):
         button_width = int(self.screen_width / 6)  # Divide the width equally into 6 parts for 3 buttons and gaps
         button_height = int(self.screen_height / 5)  # Divide the height equally to create a square button
 
-        # Button 1: Picture
-        pic_image = ctk.CTkImage(
-            light_image=Image.open("./button_images/picture.png"),
-            size=(button_width, button_height)
-        )
-        pic_button = ctk.CTkButton(self.main_frame, text="", image=pic_image, command=self.taking_picture_page)
-        pic_button.grid(row=1, column=0, padx=(self.screen_width / 30, 0))
+        button_data = [
+            {
+                "image_path": "./button_images/picture.png",
+                "command": self.taking_picture_page
+            },
+            {
+                "image_path": "./button_images/boomerang.png",
+                "command": None  # Add the command for the boomerang button
+            },
+            {
+                "image_path": "./button_images/video.png",
+                "command": None  # Add the command for the video button
+            }
+        ]
 
-        # Button 2: Boomerang
-        boomerang_pic = ctk.CTkImage(
-            light_image=Image.open("./button_images/boomerang.png"),
-            size=(button_width, button_height)
-        )
-        boomerang_button = ctk.CTkButton(self.main_frame, text="", image=boomerang_pic)
-        boomerang_button.grid(row=1, column=1, padx=(self.screen_width / 30, self.screen_width / 30))
-
-        # Button 3: Video
-        video_pic = ctk.CTkImage(
-            light_image=Image.open("./button_images/video.png"),
-            size=(button_width, button_height)
-        )
-        video_button = ctk.CTkButton(self.main_frame, text="", image=video_pic)
-        video_button.grid(row=1, column=2, padx=(0, self.screen_width / 30))
+        for i, data in enumerate(button_data):
+            image = ctk.CTkImage(
+                light_image=Image.open(data["image_path"]),
+                size=(button_width, button_height)
+            )
+            button = ctk.CTkButton(self.main_frame, text="", image=image, command=data["command"])
+            button.grid(row=1, column=i, padx=(self.screen_width / 30, 0))
 
     def taking_picture_page(self):
         """handles what happens after the picture button is pressed"""
@@ -132,7 +131,7 @@ class UserInterface(ctk.CTkFrame):
         Show Accept, Retake and Return buttons
         :param image: function takes a PIL image
         """
-        if self.preview_frame:
+        if self.preview_frame is not None:
             self.preview_frame.destroy()
 
         self.review_frame = ctk.CTkFrame(self.master, width=self.screen_width, height=self.screen_height)
@@ -266,15 +265,15 @@ class UserInterface(ctk.CTkFrame):
 
     def retake_picture(self):
         """Retake the picture"""
-        if self.review_frame:
+        if self.review_frame is not None:
             self.review_frame.destroy()
         self.taking_picture_page()
 
     def cancel_picture(self):
         """Return to main page"""
-        if self.review_frame:
+        if self.review_frame is not None:
             self.review_frame.destroy()
-        if self.keyboard_page_frame:
+        if self.keyboard_page_frame is not None:
             self.keyboard_page_frame.destroy()
 
         self.home_page()
