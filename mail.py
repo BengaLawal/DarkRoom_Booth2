@@ -2,6 +2,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
+from email.mime.base import MIMEBase
+from email import encoders
 import os
 
 class EmailSender:
@@ -11,11 +13,11 @@ class EmailSender:
         self.subject = 'Picture Attachment'
         self.body = "Enjoy your photos!\nDon't forget to share using #RUSHCLAREMONT"
 
-    def send_email(self, receiver_email, picture_path):
+    def send_email(self, receiver_email, path, function):
         """
         handles sending the email with attachment
         :param receiver_email: the customers email
-        :param picture_path: path to the picture that needs to be sent
+        :param path: path to the picture that needs to be sent
         """
         # SMTP server settings
         smtp_server = 'smtp.gmail.com'
@@ -29,11 +31,21 @@ class EmailSender:
         msg['To'] = receiver_email
         msg['Subject'] = self.subject
 
-        # Attach the picture
-        with open(picture_path, 'rb') as picture_file:
-            picture_data = picture_file.read()
-            picture_mime = MIMEImage(picture_data, name='picture.jpg')
-            msg.attach(picture_mime)
+        if function == "picture":
+            # Attach the picture
+            with open(path, 'rb') as picture_file:
+                picture_data = picture_file.read()
+                picture_mime = MIMEImage(picture_data, name='picture.jpg')
+                msg.attach(picture_mime)
+        elif function == "video":
+            # Attach the video
+            with open(path, 'rb') as video_file:
+                video_data = video_file.read()
+                video_mime = MIMEBase('application', 'octet-stream')
+                video_mime.set_payload(video_data)
+                encoders.encode_base64(video_mime)
+                video_mime.add_header('Content-Disposition', 'attachment', filename=os.path.basename(path))
+                msg.attach(video_mime)
 
         # Add the body message
         body = MIMEText(self.body)
