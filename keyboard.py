@@ -1,4 +1,6 @@
 import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
+from validate_email import validate_email
 
 class Keyboard:
     def __init__(self, master, width, height, entry_box, cancel, enter):
@@ -105,7 +107,25 @@ class Keyboard:
         """
         Handle Enter key press
         """
-        self.enter()
+        entered_text = self.entry_box.get()
+        # check the validity of the email
+        is_valid = validate_email(entered_text,
+                                  check_format=True,
+                                  check_blacklist=True,
+                                  check_dns=True,
+                                  dns_timeout=10,
+                                  check_smtp=True)
+        if is_valid:
+            self.enter()
+        else:
+            messagebox = CTkMessagebox(title="Invalid email", message="The email you have entered is invalid",
+                          icon="question", option_1="Try again", option_2="Cancel")
+            response = messagebox.get()
+            if response == "Try again":
+                messagebox.destroy()
+            elif response == "Cancel":
+                messagebox.destroy()
+                self.cancel()
 
     def handle_cancel(self):
         """

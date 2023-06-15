@@ -5,4 +5,7 @@ keyboard~=0.13.5
 gphoto2~=2.3.4
 moviepy~=1.0.3
 numpy==1.24.3
-opencv-python
+opencv-python~=4.7.0.72
+CTkMessagebox~=2.0
+py3dns~=3.2.1
+git+https://gitea.ksol.io/karolyi/py3-validate-email@v1.0.9
