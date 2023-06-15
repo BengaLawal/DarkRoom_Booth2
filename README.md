@@ -1,7 +1,7 @@
 # DarkRoom_Booth2
 Work in progress
 
-The picture and Video buttons are the only buttons that currently works.
+The picture and video buttons are the only buttons that currently works.
 
 You are able to take a picture/video with the options of accepting, retaking, or canceling the picture.
 
